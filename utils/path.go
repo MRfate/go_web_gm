@@ -35,3 +35,10 @@ func GetScaleImageName(fileName string, scale int) string {
 	filePrefix := fileName[0:(len(fileName) - len(ext))]
 	return filePrefix + "_scale_" + strconv.Itoa(scale) + ext
 }
+
+// GetWidthImageName 通过一点的规则返回对应比例缩略图的文件位置
+func GetWidthImageName(fileName string, width int) string {
+	ext := path.Ext(fileName)
+	filePrefix := fileName[0:(len(fileName) - len(ext))]
+	return filePrefix + "_width_" + strconv.Itoa(width) + ext
+}

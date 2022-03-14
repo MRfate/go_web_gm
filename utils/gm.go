@@ -37,7 +37,7 @@ func (gm *GMUtil) ResizeImage(img image.Image, scale int) image.Image {
 	}
 	size := gm.GetSize(img)
 	w := size.W * scale / 100
-	return gm.resizeImageByW(img, w)
+	return gm.ResizeImageByWidth(img, w)
 }
 
 
@@ -49,11 +49,11 @@ func (gm *GMUtil) ResizeImageByPath(path string, scale int) image.Image {
 	img := gm.GetImage(path)
 	size := gm.GetSize(img)
 	w := size.W * scale / 100
-	return gm.resizeImageByW(img, w)
+	return gm.ResizeImageByWidth(img, w)
 }
 
-// resizeImageByW 按宽度生成缩略图
-func (gm *GMUtil) resizeImageByW (img image.Image, w int) image.Image {
+// ResizeImageByWidth 按宽度生成缩略图
+func (gm *GMUtil) ResizeImageByWidth (img image.Image, w int) image.Image {
 	return imaging.Resize(img, w, 0, imaging.Lanczos)
 }
 
