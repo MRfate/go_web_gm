@@ -13,7 +13,7 @@ type ConfigModel struct {
 
 var Config = &ConfigModel{}
 
-const PATH string = "./config/config.json"
+const PATH string = "./config.json"
 
 func loadConfig() *ConfigModel {
 	data, err := ioutil.ReadFile(PATH)
