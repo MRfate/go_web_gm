@@ -34,15 +34,14 @@ func (g *GMController) GetLocalWidth(ctx iris.Context) interface{} {
 		ctx.StatusCode(404)
 		return nil
 	}
-	theGMService := services.GMService{}
-	scaleImageName, i, done := theGMService.ResizeImgByWidthInLocal(ctx, url, width)
+	gmService := services.GMService{}
+	scaleImageName, i, done := gmService.ResizeImgByWidthInLocal(ctx, url, width)
 	if done {
 		return i
 	}
 	ctx.Redirect(utils.GetUrl(scaleImageName), 302)
 	return nil
 }
-
 
 func (g *GMController) GetLocalScale(ctx iris.Context) interface{} {
 	query := ctx.Request().URL.Query()
@@ -57,13 +56,39 @@ func (g *GMController) GetLocalScale(ctx iris.Context) interface{} {
 		ctx.StatusCode(404)
 		return nil
 	}
-	theGMService := services.GMService{}
-	scaleImageName, i, done := theGMService.ResizeImgByScaleInLocal(ctx, url, scale)
+	gmService := services.GMService{}
+	scaleImageName, i, done := gmService.ResizeImgByScaleInLocal(ctx, url, scale)
 	if done {
 		return i
 	}
 	ctx.Redirect(utils.GetUrl(scaleImageName), 302)
 	return nil
+}
+
+func (g *GMController) GetLocalSub(ctx iris.Context) {
+	query := ctx.Request().URL.Query()
+	url := query.Get("url")
+	x, _ := strconv.Atoi(query.Get("x"))
+	y, err := strconv.Atoi(query.Get("y"))
+	w, err := strconv.Atoi(query.Get("w"))
+	h, err := strconv.Atoi(query.Get("h"))
+	if x < 0 || y < 0 || w < 1 || h < 1 {
+		ctx.StatusCode(404)
+		return
+	}
+	if err != nil {
+		fmt.Println(err)
+		ctx.StatusCode(404)
+		return
+	}
+	fmt.Println(x, y, w, h, url)
+	gmService := services.GMService{}
+	subImgName, done := gmService.SubImage(ctx, url, x, y, w, h, err)
+	if done {
+		return
+	}
+	ctx.Redirect(utils.GetUrl(subImgName), 302)
+	return
 }
 
 func (g *GMController) GetResize(ctx iris.Context) {
@@ -80,8 +105,8 @@ func (g *GMController) GetResize(ctx iris.Context) {
 		return
 	}
 	ext := strings.ToLower(path.Ext(url))
-	theGMService := services.GMService{}
-	theByte := theGMService.GetResize(scale, url, ext)
+	gmService := services.GMService{}
+	theByte := gmService.GetResize(scale, url, ext)
 
 	_, err = ctx.Write(theByte)
 	if err != nil {
@@ -108,8 +133,8 @@ func (g *GMController) GetWidth(ctx iris.Context) {
 	}
 	ext := strings.ToLower(path.Ext(url))
 
-	theGMService := services.GMService{}
-	theByte, done := theGMService.ResizeByWidth(ctx, url, width, ext)
+	gmService := services.GMService{}
+	theByte, done := gmService.ResizeByWidth(ctx, url, width, ext)
 	if done {
 		return
 	}

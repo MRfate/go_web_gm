@@ -51,3 +51,17 @@ http://localhost:8080/images/1.png 可以直接访问
 重定向：http://localhost:8080/images/1_width_20.png
 本地也会生成对应的静态文件
 ```
+
+
+> http://localhost:8080/gm/local/sub?url=/images/1.png&x=0&y=0&w=100&h=100
+```
+url: 网络相对地址
+x: 截图起始位置的横坐标
+y: 截图起始位置的纵坐标
+w: 截图宽度
+h: 截图高度
+http://localhost:8080/images/1.png 可以直接访问
+原地址：http://localhost:8080/gm/local/sub?url=/images/1.png&x=0&y=0&w=100&h=100 生成后
+重定向：http://localhost:8080/images/1_sub_0_0_100_100.png
+本地也会生成对应的静态文件
+```

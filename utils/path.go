@@ -7,6 +7,7 @@ import (
 	"strings"
 	"testIris2/config"
 )
+
 // GetLocalName 通过参数返回本地的文件路径
 func GetLocalName(url string) string {
 	return strings.Replace(url, config.Config.Prefix, config.Config.LocalPath, 1)
@@ -34,6 +35,13 @@ func GetScaleImageName(fileName string, scale int) string {
 	ext := path.Ext(fileName)
 	filePrefix := fileName[0:(len(fileName) - len(ext))]
 	return filePrefix + "_scale_" + strconv.Itoa(scale) + ext
+}
+
+// GetSubImageName 通过一定的规则返回对应切图的文件位置
+func GetSubImageName(x int, y int, w int, h int, fileName string) string {
+	ext := path.Ext(fileName)
+	filePrefix := fileName[0:(len(fileName) - len(ext))]
+	return filePrefix + "_sub_" + strconv.Itoa(x) + "_" + strconv.Itoa(y) + "_" + strconv.Itoa(w) + "_" + strconv.Itoa(h) + ext
 }
 
 // GetWidthImageName 通过一点的规则返回对应比例缩略图的文件位置

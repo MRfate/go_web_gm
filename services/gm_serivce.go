@@ -35,6 +35,37 @@ func (gms *GMService) ResizeByWidth(ctx iris.Context, url string, width int, ext
 	return theByte, false
 }
 
+func (gms *GMService) SubImage(ctx iris.Context, url string, x int, y int, w int, h int, err error) (string, bool) {
+	fileName := utils.GetLocalName(url)
+	isExist, _ := utils.PathExists(fileName)
+	if !isExist {
+		ctx.StatusCode(404)
+		return "", true
+	}
+	subImgName := utils.GetSubImageName(x, y, w, h, fileName)
+	isExist, _ = utils.PathExists(subImgName)
+	// 本地存在就直接重定向
+	if isExist {
+		url = utils.GetUrl(subImgName)
+		ctx.Redirect(url, 302)
+		return "", true
+	}
+	gm := utils.GMUtil{}
+	img := gm.GetImage(fileName)
+	size := gm.GetSize(img)
+	if x+w > size.W || y+h > size.H {
+		ctx.StatusCode(500)
+		return "", true
+	}
+	newImg, err := gm.SubImage(img, x, y, w, h)
+	if err != nil {
+		ctx.StatusCode(500)
+		return "", true
+	}
+	gm.SaveImage(newImg, subImgName)
+	return subImgName, false
+}
+
 
 func (gms *GMService) ResizeImgByScaleInLocal(ctx iris.Context, url string, scale int) (string, interface{}, bool) {
 	fileName := utils.GetLocalName(url)
